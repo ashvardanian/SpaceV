@@ -11,12 +11,15 @@ This adaptation re-distributes it under the same [O-UDA license](https://github.
 
 All files are binary matrices in row-major order, prepended by two 32-bit unsigned integers - the number of rows and columns.
 
-- `base.1B.i8bin` - 1e9 vectors, each as a 100x 8-bit signed integers. (131 GB)
+- `base.1B.i8bin` - 1.4e9 vectors, each as a 100x 8-bit signed integers. (131 GB)
 - `query.30K.i8bin` - 3e4 search queries vectors, each as a 100x 8-bit signed integers. (3 MB)
 - `groundtruth.30K.i32bin` - 3e4 ground truth outputs, as a 100x 32-bit integer row IDs. (12 MB)
 - `groundtruth.30K.f32bin` - Euclidean distances to each of the 3e4 by 100x search results. (12 MB)
-- `base.100M.i8bin` - 1e8 vectors subset, each as a 100x 8-bit signed integers. (13 GB)
-- `ids.100M.i32bin` - 1e8 vector IDs subset, each as a 100x 32-bit integer row IDs. (400 MB)
+
+A smaller 100M subset:
+
+- `base.100M.i8bin` - 1e8 vectors subset, each as a 100x 8-bit signed integers. (9 GB)
+- `ids.100M.i32bin` - 1e8 vector IDs subset, each as a 100x 32-bit integer row IDs. (380 MB)
 
 ## Access
 
