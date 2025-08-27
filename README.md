@@ -6,6 +6,9 @@ It provides vectors in an 8-bit integral form, empirically optimal for large-sca
 
 The [original dataset](https://github.com/microsoft/SPTAG/tree/main/datasets/SPACEV1B) was fragmented into 4 GB, which required additional preprocessing before it could be used.
 This adaptation re-distributes it under the same [O-UDA license](https://github.com/microsoft/SPTAG/blob/main/datasets/SPACEV1B/LICENSE), but in a more accessible format, and augmented with more metadata.
+The project description is hosted on [GitHub](https://github.com/ashvardanian/SpaceV) under `ashvardanian/SpaceV`.
+The primary merged dataset is hosted on [AWS S3](https://bigger-ann.s3.amazonaws.com/) under `s3://bigger-ann/spacev-1b/`.
+The smaller subsample is hosted on [HuggingFace](https://huggingface.co/datasets/unum-cloud/ann-spacev-100m) under `unum-cloud/ann-spacev-100m`.
 
 ## Structure
 
@@ -34,16 +37,22 @@ $ user@host$ aws s3 ls s3://bigger-ann/spacev-1b/
 > YYYY-MM-dd HH:mm:ss      2931608 query.30K.i8bin
 ```
 
-To download the dataset, use the following command:
+To download the dataset into a local directory, use the following command:
 
 ```bash
-aws s3 cp s3://bigger-ann/spacev-1b/ . --recursive
+mkdir -p datasets/spacev-1b/
+aws s3 cp s3://bigger-ann/spacev-1b/ datasets/spacev-1b/ --recursive
 ```
 
-For convenience, a smaller 100M subset is also available on GitHub via LFS:
+For convenience, a smaller 100M subset is also available on HuggingFace via LFS:
 
 ```bash
-git lfs clone https://github.com/ashvardanian/SpaceV.git
+mkdir -p datasets/spacev-100m/ && \
+    wget -nc https://huggingface.co/datasets/unum-cloud/ann-spacev-100m/resolve/main/ids.100m.i32bin -P datasets/spacev-100m/ &&
+    wget -nc https://huggingface.co/datasets/unum-cloud/ann-spacev-100m/resolve/main/base.100m.i8bin -P datasets/spacev-100m/ &&
+    wget -nc https://huggingface.co/datasets/unum-cloud/ann-spacev-100m/resolve/main/query.30K.i8bin -P datasets/spacev-100m/ &&
+    wget -nc https://huggingface.co/datasets/unum-cloud/ann-spacev-100m/resolve/main/groundtruth.30K.i32bin -P datasets/spacev-100m/ &&
+    wget -nc https://huggingface.co/datasets/unum-cloud/ann-spacev-100m/resolve/main/groundtruth.30K.f32bin -P datasets/spacev-100m/
 ```
 
 ## Usage
