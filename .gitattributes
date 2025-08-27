@@ -2,3 +2,5 @@ base.1B.i8bin filter=lfs diff=lfs merge=lfs -text
 groundtruth.30K.i32bin filter=lfs diff=lfs merge=lfs -text
 groundtruth.30K.f32bin filter=lfs diff=lfs merge=lfs -text
 query.30K.i8bin filter=lfs diff=lfs merge=lfs -text
+base.100M.i8bin filter=lfs diff=lfs merge=lfs -text
+ids.100M.i32bin filter=lfs diff=lfs merge=lfs -text
