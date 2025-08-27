@@ -40,8 +40,8 @@ $ user@host$ aws s3 ls s3://bigger-ann/spacev-1b/
 To download the dataset into a local directory, use the following command:
 
 ```bash
-mkdir -p datasets/spacev-1b/
-aws s3 cp s3://bigger-ann/spacev-1b/ datasets/spacev-1b/ --recursive
+mkdir -p datasets/spacev-1b/ && \
+    aws s3 cp s3://bigger-ann/spacev-1b/ datasets/spacev-1b/ --recursive --no-sign-request
 ```
 
 For convenience, a smaller 100M subset is also available on HuggingFace via LFS:
@@ -56,6 +56,18 @@ mkdir -p datasets/spacev-100m/ && \
 ```
 
 ## Usage
+
+To re-sample the 100M dataset from 1B, run:
+
+```bash
+uv run --script sample.py # sample and verify
+uv run --script sample.py --verify-only # verify
+huggingface-cli upload \
+    --repo-type dataset \
+    unum-cloud/ann-spacev-100m \
+    base.100M.i8bin \
+    base.100M.i8bin
+```
 
 The dataset can be loaded with the following Python code, "viewing" the data to avoid pulling everything into memory:
 
