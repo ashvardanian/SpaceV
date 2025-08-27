@@ -4,6 +4,9 @@
 # ///
 """
 Sample 100M vectors from the 1B SpaceV dataset, ensuring all ground truth IDs are included.
+To run via `uv`:
+
+    uv run --script sample.py
 """
 import struct
 import numpy as np
@@ -60,15 +63,16 @@ def main():
         f"Need {additional_needed:,} additional random vectors to reach {target_size:,}"
     )
 
-    # Create set of all possible IDs excluding the required ones
-    all_ids = set(range(total_vectors))
-    available_ids = list(all_ids - set(required_ids))
-
-    # Sample additional random IDs
+    # Sample additional random IDs efficiently using NumPy
     np.random.seed(42)  # For reproducibility
-    additional_ids = np.random.choice(
-        available_ids, size=additional_needed, replace=False
-    )
+    
+    # Generate more candidates than needed to account for collisions with required_ids
+    # The collision probability is small (2.8M / 1.4B ≈ 0.2%), so generate 20% extra
+    candidates_needed = int(additional_needed * 1.2)
+    candidates = np.random.choice(total_vectors, size=candidates_needed, replace=False)
+    
+    # Remove any candidates that are in required_ids
+    additional_ids = np.setdiff1d(candidates, required_ids)[:additional_needed]
 
     # Combine required and additional IDs, then sort
     final_ids = np.concatenate([required_ids, additional_ids])
@@ -79,7 +83,9 @@ def main():
 
     # Load and sample the vectors
     print("Loading full dataset and sampling vectors...")
-    sampled_vectors = []
+    
+    # Pre-allocate numpy array to avoid memory issues
+    sampled_matrix = np.empty((len(final_ids), vector_dim), dtype=np.int8)
     
     with open("base.1B.i8bin", "rb") as f:
         # Skip header
@@ -87,15 +93,12 @@ def main():
         
         # Load vectors with progress bar
         with tqdm(final_ids, desc="Sampling vectors") as pbar:
-            for vector_id in pbar:
+            for i, vector_id in enumerate(pbar):
                 # Seek to the vector position
                 f.seek(8 + vector_id * vector_dim)
                 vector_data = f.read(vector_dim)
                 vector = np.frombuffer(vector_data, dtype=np.int8)
-                sampled_vectors.append(vector)
-
-    # Convert to numpy array
-    sampled_matrix = np.array(sampled_vectors, dtype=np.int8)
+                sampled_matrix[i] = vector
     print(f"Sampled matrix shape: {sampled_matrix.shape}")
 
     print("Saving sampled dataset...")
